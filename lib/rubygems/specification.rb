@@ -751,12 +751,6 @@ class Gem::Specification < Gem::BasicSpecification
   def self._all # :nodoc:
     unless @@all
       @@all = stubs.map(&:to_spec)
-
-      # After a reset, make sure already loaded specs
-      # are still marked as activated.
-      specs = {}
-      Gem.loaded_specs.each_value{|s| specs[s] = true }
-      @@all.each{|s| s.activated = true if specs[s] }
     end
     @@all
   end
@@ -810,6 +804,12 @@ class Gem::Specification < Gem::BasicSpecification
     @@stubs ||= begin
       pattern = "*.gemspec"
       stubs = stubs_for_pattern(pattern, false)
+
+      # After a reset, make sure already loaded stubs
+      # are still marked as activated.
+      specs = {}
+      Gem.loaded_specs.each_value{|s| specs[s] = true }
+      stubs.each{|s| s.activated = true if specs[s] }
 
       @@stubs_by_name = stubs.select {|s| Gem::Platform.match_spec? s }.group_by(&:name)
       stubs
