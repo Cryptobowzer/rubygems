@@ -179,12 +179,16 @@ class Gem::Specification < Gem::BasicSpecification
   end
 
   def self._clear_specs # :nodoc:
-    @@all = nil
-    @@stubs = nil
-    @@stubs_by_name = {}
-    @@spec_with_requirable_file = {}
-    @@active_stub_with_requirable_file = {}
+    @@all_specs_mutex.synchronize do
+      @@all = nil
+      @@stubs = nil
+      @@stubs_by_name = {}
+      @@spec_with_requirable_file = {}
+      @@active_stub_with_requirable_file = {}
+    end
   end
+
+  @@all_specs_mutex = Thread::Mutex.new
 
   _clear_specs
 
@@ -749,7 +753,7 @@ class Gem::Specification < Gem::BasicSpecification
   attr_accessor :specification_version
 
   def self._all # :nodoc:
-    @@all ||= stubs.map(&:to_spec)
+    @@all_specs_mutex.synchronize { @@all ||= stubs.map(&:to_spec) }
   end
 
   def self._clear_load_cache # :nodoc:
