@@ -827,17 +827,15 @@ RSpec.describe "bundle update in more complicated situations" do
         DEPENDENCIES
           a
       L
-
-      simulate_platform linux
     end
 
     it "allows updating" do
-      bundle :update, :all => true
+      simulate_platform(linux) { bundle :update, :all => true }
       expect(the_bundle).to include_gem "a 1.1"
     end
 
     it "allows updating a specific gem" do
-      bundle "update a"
+      simulate_platform(linux) { bundle "update a" }
       expect(the_bundle).to include_gem "a 1.1"
     end
   end
@@ -866,12 +864,10 @@ RSpec.describe "bundle update in more complicated situations" do
         DEPENDENCIES
           a
       L
-
-      simulate_platform linux
     end
 
     it "is not updated because it is not actually included in the bundle" do
-      bundle "update a"
+      simulate_platform(linux) { bundle "update a", :verbose => true }
       expect(last_command.stdboth).to include "Bundler attempted to update a but it was not considered because it is for a different platform from the current one"
       expect(the_bundle).to_not include_gem "a"
     end
