@@ -67,7 +67,7 @@ module Bundler
       "#<#{self.class}:0x#{object_id} #{self}>"
     end
 
-    def to_err
+    def sort_obj
       to_s
     end
 

@@ -66,7 +66,7 @@ module Bundler
 
       if locked_gems = Bundler.definition.locked_gems
         previous_locked_info = locked_gems.specs.reduce({}) do |h, s|
-          h[s.name] = { :spec => s, :version => s.version, :source => s.source.to_s }
+          h[s.name] = { :spec => s, :version => s.version, :source => s.source.sort_obj }
           h
         end
       end
@@ -95,7 +95,7 @@ module Bundler
           end
 
           locked_source = locked_info[:source]
-          new_source = new_spec.source.to_s
+          new_source = new_spec.source.sort_obj
           next if locked_source != new_source
 
           new_version = new_spec.version

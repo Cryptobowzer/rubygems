@@ -16,7 +16,7 @@ module Bundler
         @index
       end
 
-      def to_err
+      def sort_obj
         to_s
       end
 
